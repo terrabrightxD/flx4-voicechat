@@ -13,9 +13,15 @@ processResources {
     inputs.property 'version', project.version
     filesMatching('fabric.mod.json') { expand(version: project.version) }
 }
+sourceSets {
+    audioTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
 tasks.register('audioTest', JavaExec) {
-    dependsOn testClasses
-    classpath = sourceSets.test.runtimeClasspath
+    dependsOn audioTestClasses
+    classpath = sourceSets.audioTest.runtimeClasspath
     mainClass = 'de.terrabright.flx4.AudioTest'
 }
 check.dependsOn audioTest
