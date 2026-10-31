@@ -1,14 +1,17 @@
-plugins { id 'java' }
+plugins { id 'net.fabricmc.fabric-loom' version '1.17.21' }
 group = 'de.terrabright'
-version = '0.1.0-alpha.1'
+version = '0.2.0-alpha.1'
 repositories {
     mavenCentral()
     maven { url = 'https://maven.maxhenkel.de/repository/public' }
 }
-dependencies { compileOnly 'de.maxhenkel.voicechat:voicechat-api:2.6.27' }
-// No Minecraft internals, mappings, Fabric API, or Loom are needed:
-// Fabric discovers the voicechat entrypoint and Simple Voice Chat loads it.
-java { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
+dependencies {
+    minecraft 'com.mojang:minecraft:26.3'
+    implementation 'net.fabricmc:fabric-loader:0.19.5'
+    implementation 'net.fabricmc.fabric-api:fabric-api:0.160.5+26.3'
+    compileOnly 'de.maxhenkel.voicechat:voicechat-api:2.6.27'
+}
+java { sourceCompatibility = JavaVersion.VERSION_25; targetCompatibility = JavaVersion.VERSION_25 }
 processResources {
     inputs.property 'version', project.version
     filesMatching('fabric.mod.json') { expand(version: project.version) }
@@ -26,11 +29,3 @@ tasks.register('audioTest', JavaExec) {
 }
 check.dependsOn audioTest
 jar { from('LICENSE') }
-
-// Requires a desktop display; CI supplies Xvfb. Kept separate from headless audio tests.
-tasks.register('desktopTest', JavaExec) {
-    dependsOn audioTestClasses
-    classpath = sourceSets.audioTest.runtimeClasspath
-    mainClass = 'de.terrabright.flx4.DesktopTest'
-    args sourceSets.main.output.classesDirs.asPath
-}
