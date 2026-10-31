@@ -1,0 +1,22 @@
+plugins { id 'java' }
+group = 'de.terrabright'
+version = '0.1.0-alpha.1'
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.maxhenkel.de/repository/public' }
+}
+dependencies { compileOnly 'de.maxhenkel.voicechat:voicechat-api:2.6.27' }
+// No Minecraft internals, mappings, Fabric API, or Loom are needed:
+// Fabric discovers the voicechat entrypoint and Simple Voice Chat loads it.
+java { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') { expand(version: project.version) }
+}
+tasks.register('audioTest', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'de.terrabright.flx4.AudioTest'
+}
+check.dependsOn audioTest
+jar { from('LICENSE') }

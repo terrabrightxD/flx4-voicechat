@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "flx4_voicechat",
+  "version": "${version}",
+  "name": "FLX4 Voice Chat Bridge",
+  "description": "Send a Rekordbox mix through Simple Voice Chat using a virtual audio cable.",
+  "authors": ["terrabrightxD"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": { "voicechat": ["de.terrabright.flx4.FlxPlugin"] },
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "26.3",
+    "java": ">=25",
+    "voicechat": ">=2.6.27",
+    "voicechat_api": ">=2.6.27"
+  }
+}
