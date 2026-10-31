@@ -48,7 +48,7 @@ Es wird der fertige Audiomix übernommen. Jogwheels, Fader, Effekte und Cue funk
 
 | Problem | Prüfen |
 |---|---|
-| Kein Bedienfenster | Voice Chat wirklich verbunden? Mod unter 26.3 geladen? Im Log nach `flx4` suchen. Desktop-Java mit AWT/Swing verwenden; kein `-Djava.awt.headless=true`. |
+| Kein Bedienfenster | Voice Chat wirklich verbunden? Mod unter 26.3 geladen? Im Log nach `flx4` suchen. Desktop-Java mit AWT/Swing verwenden. Das Fenster läuft automatisch in einem eigenen Java-Prozess; Minecraft darf im Headless-Modus bleiben. |
 | Kein Gerät sichtbar | VB-CABLE installieren, neustarten, „Geräte neu laden“. Windows muss CABLE Output als Aufnahmegerät zeigen. |
 | Aufnahmefehler | Gerät auf 48 kHz/16 Bit stellen; exklusiven Zugriff anderer Programme beenden. Kein ASIO-Gerät direkt auswählen. |
 | Pegel bewegt sich, niemand hört Musik | Voice Chat verbunden/aktiv? Mikrofon stumm? Option für Musik trotz Stummschaltung prüfen. Server-Sprechrechte, Gruppe und Entfernung prüfen. |
@@ -66,11 +66,12 @@ gradle clean build
 
 Ausgabe: `build/libs/flx4-voicechat-0.1.0-alpha.1.jar`.
 
-Die Mod verwendet ausschließlich die öffentliche Voice-Chat-API und Java Sound/Swing. Deshalb sind kein Minecraft-Download, keine Mappings und kein Remapping mit Loom nötig. Der Java-Bytecode bleibt Java-17-kompatibel; Minecraft 26.3 selbst benötigt Java 25.
+Die Mod verwendet ausschließlich die öffentliche Voice-Chat-API und Java Sound. Das Swing-Bedienfenster läuft in einem eigenen Java-Prozess und kommuniziert ausschließlich über private Prozess-Pipes mit Minecraft; es benötigt weder Netzwerkports noch eine separate Installation. Deshalb sind kein Minecraft-Download, keine Mappings und kein Remapping mit Loom nötig. Der Java-Bytecode bleibt Java-17-kompatibel; Minecraft 26.3 selbst benötigt Java 25.
 
 - Aufnahme: 48 kHz, signed PCM16 little endian; Stereo mit Mono-Fallback.
 - Frames: 960 Samples / 20 ms. Maximal drei Frames im FIFO; alte Frames über 100 ms werden verworfen.
 - Keine Datei-Aufzeichnung, keine zusätzlichen Netzwerkports und kein eigener Serverdienst.
+- `gradle desktopTest`: Test des echten Bedienfenster-Prozesses und seines sauberen Endes; benötigt eine Desktop-Anzeige (Linux: `xvfb-run -a gradle desktopTest`).
 - `gradle audioTest`: Tests für PCM-Dekodierung, Downmix, Übersteuerung, Pegel und Puffer.
 - Siehe [TESTING.md](TESTING.md) für den noch erforderlichen Praxistest.
 

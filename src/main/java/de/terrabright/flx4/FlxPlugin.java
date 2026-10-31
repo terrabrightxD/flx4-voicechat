@@ -10,7 +10,7 @@ public final class FlxPlugin implements VoicechatPlugin {
     volatile boolean allowWhileMicMuted;
     volatile double gain = 0.7;
     volatile String transmission = "Nicht verbunden";
-    private ControlPanel panel;
+    private DesktopBridge panel;
 
     @Override public String getPluginId() { return "flx4_voicechat"; }
     @Override public void registerEvents(EventRegistration events) {
@@ -21,10 +21,8 @@ public final class FlxPlugin implements VoicechatPlugin {
                 transmission = "Getrennt – zum Fortsetzen erneut starten";
             } else {
                 transmission = "Verbunden – Musik gestoppt";
-                javax.swing.SwingUtilities.invokeLater(() -> {
-                    if (panel == null) panel = new ControlPanel(this);
-                    panel.show();
-                });
+                if (panel == null) panel = new DesktopBridge(this);
+                panel.show();
             }
         });
         events.registerEvent(MergeClientSoundEvent.class, event -> {
@@ -49,6 +47,9 @@ public final class FlxPlugin implements VoicechatPlugin {
             capture.stop();
             transmission = "Voice-Chat-Status geändert – erneut starten";
         });
-        Runtime.getRuntime().addShutdownHook(new Thread(capture::stop, "flx4-shutdown"));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            capture.stop();
+            if (panel != null) panel.close();
+        }, "flx4-shutdown"));
     }
 }

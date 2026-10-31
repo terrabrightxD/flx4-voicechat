@@ -6,6 +6,8 @@
 
 The tests cover signed little-endian PCM, stereo overflow, downmix, saturating gain, zero gain, negative full-scale metering, invalid gain rejection, queue overflow ordering, stale-frame expiry, queue clearing, and frame length.
 
+`xvfb-run -a gradle desktopTest` starts the actual Swing subprocess with synthetic device/status messages, checks that it remains alive, and verifies clean exit when the parent pipe closes. This checks UI startup and process lifecycle on Linux, not Windows audio capture.
+
 ## Manual acceptance – pending
 
 Requires Windows, Java 25, Minecraft 26.3/Fabric, Simple Voice Chat 2.6.27+, VB-CABLE, Rekordbox, FLX4 and a second connected player.

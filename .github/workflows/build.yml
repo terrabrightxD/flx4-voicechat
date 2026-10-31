@@ -15,6 +15,7 @@ jobs:
         with:
           gradle-version: '9.1.0'
       - run: gradle --no-daemon clean build
+      - run: xvfb-run -a gradle --no-daemon desktopTest
       - uses: actions/upload-artifact@v4
         with:
           name: flx4-voicechat-26.3

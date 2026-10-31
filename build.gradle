@@ -26,3 +26,11 @@ tasks.register('audioTest', JavaExec) {
 }
 check.dependsOn audioTest
 jar { from('LICENSE') }
+
+// Requires a desktop display; CI supplies Xvfb. Kept separate from headless audio tests.
+tasks.register('desktopTest', JavaExec) {
+    dependsOn audioTestClasses
+    classpath = sourceSets.audioTest.runtimeClasspath
+    mainClass = 'de.terrabright.flx4.DesktopTest'
+    args sourceSets.main.output.classesDirs.asPath
+}
