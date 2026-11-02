@@ -1,6 +1,6 @@
 plugins { id 'net.fabricmc.fabric-loom' version '1.17.21' }
 group = 'de.terrabright'
-version = '0.2.0-alpha.1'
+version = '0.2.0-alpha.2'
 repositories {
     mavenCentral()
     maven { url = 'https://maven.maxhenkel.de/repository/public' }

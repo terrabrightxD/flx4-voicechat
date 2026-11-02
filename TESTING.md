@@ -8,7 +8,7 @@ The tests cover signed little-endian PCM, stereo overflow, downmix, saturating g
 
 ## Manual acceptance – pending
 
-Requires Windows, Java 25, Minecraft 26.3/Fabric, Simple Voice Chat 2.6.27+, VB-CABLE, Rekordbox, FLX4 and a second connected player.
+Requires Windows, Java 25, Minecraft 26.3/Fabric + Fabric API, Simple Voice Chat 2.6.27+, VB-CABLE, Rekordbox, FLX4 and a second connected player.
 
 - [ ] Client loads the JAR without missing dependency/API errors.
 - [ ] F8 in the world opens the native Minecraft menu. Rebinding works; nothing transmits before START.
@@ -26,3 +26,10 @@ Requires Windows, Java 25, Minecraft 26.3/Fabric, Simple Voice Chat 2.6.27+, VB-
 - [ ] Minecraft exits normally with the DJ menu open.
 
 Hardware capture, Native screen rendering/input, audible latency and end-to-end multiplayer behavior cannot be proven by the unit tests.
+
+## Localization checks
+
+- [ ] English Minecraft uses English menu labels, tooltips and transmission status.
+- [ ] German Minecraft uses the German translation.
+- [ ] Other languages fall back to English; device names retain their OS-provided names.
+- [ ] Volume and level labels display numbers and a single percent sign correctly.

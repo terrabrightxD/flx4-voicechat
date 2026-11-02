@@ -13,7 +13,7 @@ final class Capture {
         volatile TargetDataLine line;
     }
     private volatile Session current;
-    private volatile String status = "Gestoppt";
+    private volatile String status = "Stopped";
     volatile int peak;
 
     static List<Device> devices() {
@@ -30,7 +30,7 @@ final class Capture {
         if (current != null) return;
         Session session = new Session();
         current = session;
-        status = "Audioeingang wird geöffnet …";
+        status = "Opening audio input…";
         Thread worker = new Thread(() -> read(session, device), "flx4-audio-capture");
         worker.setDaemon(true);
         worker.start();
@@ -39,7 +39,7 @@ final class Capture {
         Session session = current;
         current = null;
         peak = 0;
-        status = "Gestoppt";
+        status = "Stopped";
         if (session != null) {
             session.frames.clear();
             TargetDataLine line = session.line;
@@ -72,19 +72,19 @@ final class Capture {
                     if (attempt != null) attempt.close();
                 }
             }
-            if (line == null) throw new IllegalStateException("48 kHz / 16 Bit nicht verfügbar. Windows-Audioformat prüfen.", last);
+            if (line == null) throw new IllegalStateException("48 kHz / 16-bit audio is unavailable. Check the Windows audio format.", last);
             synchronized (this) {
                 if (current != session) return;
                 session.line = line;
                 line.start();
-                status = "Audioeingang aktiv (" + channels + " Kanal/Kanäle)";
+                status = "Audio input active (" + channels + " channel(s))";
             }
             byte[] bytes = new byte[Pcm.SAMPLES * channels * 2];
             while (current == session) {
                 int offset = 0;
                 while (offset < bytes.length && current == session) {
                     int read = line.read(bytes, offset, bytes.length - offset);
-                    if (read <= 0) throw new IllegalStateException("Audioeingang wurde getrennt.");
+                    if (read <= 0) throw new IllegalStateException("Audio input disconnected.");
                     offset += read;
                 }
                 if (current != session) break;
@@ -97,7 +97,7 @@ final class Capture {
                 if (current == session) {
                     current = null;
                     peak = 0;
-                    status = "Fehler: " + e.getMessage();
+                    status = "Error: " + e.getMessage();
                 }
             }
         } finally {

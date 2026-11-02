@@ -1,84 +1,103 @@
 # FLX4 Voice Chat Bridge
 
-Client-Mod für **Minecraft Java 26.3 / Fabric / Windows**. Mixe mit deinem DDJ-FLX4 in Rekordbox und sende den Master-Mix über ein virtuelles Audiokabel in **Simple Voice Chat**. Die Musik kommt von deiner Spielfigur; das normale Mikrofon bleibt zusätzlich nutzbar.
+A client-side mod for **Minecraft Java 26.3 / Fabric / Windows**. Mix with your DDJ-FLX4 in Rekordbox and send the master mix through a virtual audio cable into **Simple Voice Chat**. Music comes from your player character, and you can still use your microphone.
 
-**Status: Alpha – Hardware- und Multiplayer-Hörtest noch offen.** Der Build-Workflow prüft Kompilierung und Audio-Tests. Ein erfolgreicher Build ersetzt keinen Test mit Windows, Rekordbox und FLX4.
+**Status: alpha.** Compilation and automated audio checks are covered by CI. In-game UI testing and end-to-end testing with Windows, Rekordbox, an FLX4 and another player are still pending.
 
-## Download und Installation
+## Downloads and requirements
 
-1. Unter [Actions → Build and test](https://github.com/terrabrightxD/flx4-voicechat/actions/workflows/build.yml) den neuesten **erfolgreichen** Lauf öffnen.
-2. Unten das Artefakt **flx4-voicechat-26.3** herunterladen (GitHub-Anmeldung nötig) und entpacken.
-3. Die enthaltene `flx4-voicechat-0.2.0-alpha.1.jar` in den `mods`-Ordner deiner Minecraft-Instanz legen.
-4. Benötigt: Minecraft **26.3**, Fabric Loader **0.19.5 oder neuer**, Java **25**, Simple Voice Chat **2.6.27 oder neuer** für 26.3. Zusätzlich **Fabric API 0.160.5+26.3 oder neuer für 26.3** installieren.
-5. Auf dem Server muss Simple Voice Chat funktionieren. Nur der DJ installiert diese Zusatzmod; Zuhörer benötigen Simple Voice Chat.
+- [First release: v0.2.0-alpha.1](https://github.com/terrabrightxD/flx4-voicechat/releases/tag/v0.2.0-alpha.1) — includes the original German-language menu.
+- [Latest development build](https://github.com/terrabrightxD/flx4-voicechat/actions/workflows/build.yml) — open the latest successful run and download **flx4-voicechat-26.3** under Artifacts. GitHub sign-in is required. Version **0.2.0-alpha.2** adds English as the default UI language and a German translation.
 
-## Windows und Rekordbox einrichten
+Extract the ZIP if necessary and put the JAR in your Minecraft instance's `mods` folder. Remove older versions of this mod first.
 
-**Signalweg:** FLX4 steuert Rekordbox → Rekordbox Master → CABLE Input → CABLE Output → diese Mod → Simple Voice Chat.
+Required:
 
-1. [VB-CABLE vom Hersteller](https://vb-audio.com/Cable/) installieren und Windows neu starten.
-2. In den klassischen Windows-Soundeinstellungen die Formate des virtuellen Kabels auf **48.000 Hz, 16 Bit, Stereo** setzen. Exklusiven Zugriff bei Problemen abschalten.
-3. In Rekordbox das Audio-Gerät **DDJ-FLX4 WASAPI** beibehalten. Kopfhörer bleiben auf **DDJ-FLX4 PHONES**, damit Cue/Vorhören privat bleibt.
-4. **PC MASTER OUT** aktivieren und den zusätzlichen Master-Ausgang auf **CABLE Input (VB-Audio Virtual Cable)** führen. Der genaue Auswahlweg hängt von der Rekordbox-Version ab. Prüfe im Master-Output-Feld, dass FLX4 MASTER **plus CABLE Input** steht. Wenn PC MASTER OUT nur das Windows-Standardgerät übernimmt: CABLE Input vor dem Start von Rekordbox als Standard-Wiedergabegerät wählen.
-5. Falls du das Windows-Standardgerät geändert hast: Minecraft, Simple Voice Chat, Browser und Discord ausdrücklich auf echte Kopfhörer/Lautsprecher routen. Sonst landen fremde Stimmen oder Spielgeräusche wieder im Kabel. Windows-Systemklänge für den Auftritt abschalten. Das Kabel soll nur den gewünschten Mix enthalten.
-6. In **Simple Voice Chat** dein echtes Mikrofon auswählen, **nicht CABLE Output**. Auch das Wiedergabegerät ausdrücklich auf deine Kopfhörer setzen. Ein funktionierender Voice-Chat-Mikrofoneingang ist für dessen Audiozyklus erforderlich.
-7. Server betreten und **F8** drücken. Das eigene **FLX4 · DJ-Mixer**-Menü öffnet sich direkt in Minecraft. Unter **Optionen → Steuerung → Tastenbelegung → FLX4 Voice Chat** lässt sich die Taste ändern.
-8. Dort mit dem obersten Button durch die Audioeingänge schalten und **CABLE Output** auswählen, einen Track in Rekordbox starten und **START** drücken. Die Anzeige sollte ausschlagen.
-9. Andere Spieler hören die Musik in deiner Nähe. Für räumlichen Klang eine eventuell aktive Voice-Chat-Gruppe verlassen; in einer Gruppe gelten deren normalen Übertragungsregeln.
-
-Die PC-MASTER-OUT-Funktion ist vom Hersteller dokumentiert. Das Routing auf VB-CABLE ist die hier vorgeschlagene Kombination und muss mit deiner Rekordbox-Version getestet werden. Falls Rekordbox das Kabel nicht übernimmt, zuerst den Windows-Aufnahmepegel von CABLE Output prüfen – ohne Signal dort kann auch die Mod nichts senden.
-
-## Bedienung
-
-- **START / STOPP**: Musikübertragung starten oder beenden. Kein automatischer Start nach Installation oder Wiederverbindung.
-- **Lautstärke 0–200 %**: Start bei 70 %. Bei Übersteuerung in Rekordbox und/oder im DJ-Menü reduzieren. Die Begrenzung verhindert Zahlenüberlauf, ist aber kein Studio-Limiter.
-- **Musik auch bei stummem Mikrofon senden**: standardmäßig aus. Aktivieren, wenn du das Mikrofon stummschalten, aber Musik weitersenden möchtest.
-- **Push-to-Talk steuert nur das Mikrofon**. Musik läuft nach START dauerhaft, auch ohne gedrückte Sprechtaste. STOPP beendet sie.
-- **Escape / Zurück zum Spiel** schließt nur das Menü: Musik läuft weiter. Mit F8 erneut öffnen und **Musik stoppen** drücken. Das Menü pausiert das Spiel nicht.
-- **Disconnect / Voice Chat deaktivieren** stoppt die Aufnahme. Nach erneuter Verbindung START drücken.
-- Einstellungen werden in dieser Alpha nicht gespeichert; du wählst Gerät und Start bei jeder Sitzung bewusst neu.
-
-## Was integriert ist – und was nicht
-
-Es wird der fertige Audiomix übernommen. Jogwheels, Fader, Effekte und Cue funktionieren weiterhin über Rekordbox. Die Mod liest keine Rekordbox-Datenbank, lädt keine Tracks und belegt keine MIDI-Regler.
-
-Über den normalen Sprachkanal wird **Mono** übertragen (Stereo wird gemittelt); echte Stereoübertragung und ein eigener Lautsprecherblock sind nicht enthalten. Die Latenz hängt zusätzlich von Windows, Kabel, Voice Chat und Netzwerk ab. Zum Beatmatching deshalb direkt am FLX4 vorhören, nicht über den Minecraft-Rückweg.
-
-## Fehlerbehebung
-
-| Problem | Prüfen |
+| Dependency | Version |
 |---|---|
-| Menü öffnet nicht | F8 im Spiel drücken; bei Tastenkonflikten unter Steuerung eine andere Taste zuweisen. Fabric API installiert? |
-| Kein Gerät sichtbar | VB-CABLE installieren, neustarten, „Audiogeräte neu laden“. Windows muss CABLE Output als Aufnahmegerät zeigen. |
-| Aufnahmefehler | Gerät auf 48 kHz/16 Bit stellen; exklusiven Zugriff anderer Programme beenden. Kein ASIO-Gerät direkt auswählen. |
-| Pegel bewegt sich, niemand hört Musik | Voice Chat verbunden/aktiv? Mikrofon stumm? Option für Musik trotz Stummschaltung prüfen. Server-Sprechrechte, Gruppe und Entfernung prüfen. |
-| Echo oder doppelte Musik | CABLE Output nicht zusätzlich als Voice-Chat-Mikrofon verwenden. Spiel/Voice-Chat-Wiedergabe niemals auf CABLE Input schicken. |
-| Abgehackter Klang | Audioformate prüfen, CPU-Last reduzieren und Rekordbox-Puffer erhöhen. Windows-Geräte- und Multiplayer-Test steht noch aus. |
-| Verzerrungen beim Sprechen über Musik | Beide Pegel reduzieren: Sprache und Musik werden im Voice-Chat-Kanal zusammengemischt. |
+| Minecraft Java Edition | 26.3 |
+| Java | 25 |
+| Fabric Loader | 0.19.5 or newer |
+| Fabric API | 0.160.5+26.3 or newer **for Minecraft 26.3** |
+| Simple Voice Chat | 2.6.27 or newer **for Minecraft 26.3** |
 
-## Entwicklung
+The server must have a working Simple Voice Chat installation. Only the DJ needs this add-on; listeners need Simple Voice Chat.
 
-JDK 25 und Gradle 9.8.2 installieren, dann:
+## Windows and Rekordbox setup
+
+**Audio path:** FLX4 controls Rekordbox → Rekordbox master → CABLE Input → CABLE Output → this mod → Simple Voice Chat.
+
+1. Install [VB-CABLE from its developer](https://vb-audio.com/Cable/) and restart Windows.
+2. In the classic Windows sound settings, set the virtual cable's playback and recording formats to **48,000 Hz, 16-bit, stereo**. Disable exclusive access if another application prevents capture.
+3. Keep **DDJ-FLX4 WASAPI** as Rekordbox's audio device. Keep the headphones output on **DDJ-FLX4 PHONES** so headphone cue stays private.
+4. Enable **PC MASTER OUT** and route the additional master output to **CABLE Input (VB-Audio Virtual Cable)**. The exact selection method depends on your Rekordbox version. Check that Master Output lists FLX4 MASTER **plus CABLE Input**. If PC MASTER OUT follows the Windows default output, select CABLE Input as the default playback device before starting Rekordbox.
+5. If you changed the Windows default output, explicitly route Minecraft, Simple Voice Chat playback, your browser and Discord to real headphones or speakers. Otherwise their audio may feed back into the cable. Disable Windows system sounds during a set. The cable should carry only the intended mix.
+6. In **Simple Voice Chat**, select your real microphone, **not CABLE Output**. Explicitly choose your headphones as the playback device. Simple Voice Chat needs a working microphone input for its audio processing cycle.
+7. Join a server and press **F8** to open the **FLX4 · DJ Mixer** menu. Change the shortcut under **Options → Controls → Key Binds → FLX4 Voice Chat** if needed.
+8. Click the top button to cycle through audio inputs and select **CABLE Output**. Play a track in Rekordbox and click **Start music**. The level meter should respond.
+9. Nearby players should hear the mix. Leave any active Voice Chat group for positional playback; while in a group, its normal transmission rules apply.
+
+The manufacturer documents PC MASTER OUT. Routing it through VB-CABLE is the proposed combination here and still needs testing with your Rekordbox version. If Rekordbox does not route to the cable, first check the Windows recording meter for CABLE Output: the mod cannot transmit a signal that never reaches that input.
+
+## Controls
+
+- **Start music / Stop music:** explicitly start or stop transmission. There is no automatic start after installation or reconnection.
+- **Music volume, 0–200%:** starts at 70%. Lower the Rekordbox and/or mod volume if the signal clips. Sample saturation prevents numeric overflow; it is not a studio limiter.
+- **Music while mic is muted:** off by default. Enable it to keep playing music while your microphone is muted.
+- **Push-to-talk controls only your microphone.** After Start, music continues without holding the speak key. Use Stop music to end it.
+- **Escape / Back to game:** closes the menu while music continues. Press F8 to reopen it. The menu does not pause the game.
+- **Disconnecting or disabling Voice Chat:** stops capture. Press Start again after reconnecting.
+- Device selection and gain survive closing and reopening the menu within a session. Settings are not saved across game restarts.
+
+The menu uses Minecraft's buttons, slider, tooltips, font and keyboard focus. Widget textures respond to resource packs. There is no separate desktop window or Java subprocess.
+
+## Language support
+
+The menu follows Minecraft's selected language. English (`en_us`) is the fallback; German (`de_de`) is also included. Audio-device names come from Windows, and technical capture errors are reported in English.
+
+To add a translation, copy `src/main/resources/assets/flx4_voicechat/lang/en_us.json` to the appropriate locale filename and translate its values. Keep the same keys and `%s` placeholders; `%%` represents a literal percent sign.
+
+## Scope and limitations
+
+The mod captures the finished audio mix. Jog wheels, faders, effects and headphone cue continue to work through Rekordbox. It does not read the Rekordbox database, load tracks or take over MIDI controls.
+
+The normal voice channel carries **mono audio**: stereo input is averaged down to mono. Stereo transmission and a placeable speaker block are not included. Total latency also depends on Windows, the virtual cable, Voice Chat and the network. Monitor directly through the FLX4 for beatmatching rather than listening to the delayed Minecraft signal.
+
+## Troubleshooting
+
+| Problem | What to check |
+|---|---|
+| Menu does not open | Press F8 while in the game. Rebind it if another mod uses the same key. Make sure Fabric API is installed. |
+| No devices appear | Install VB-CABLE, restart Windows and click Refresh audio devices. Windows must list CABLE Output as a recording device. |
+| Capture error | Set the device to 48 kHz/16-bit and stop other applications using it exclusively. Do not select an ASIO device directly. |
+| Meter moves but nobody hears music | Check the Voice Chat connection, microphone mute state, music-while-muted option, server speaking permissions, group membership and distance. |
+| Echo or duplicated music | Do not also select CABLE Output as the Voice Chat microphone. Never route game or Voice Chat playback to CABLE Input. |
+| Choppy audio | Check audio formats, reduce CPU load and increase the Rekordbox buffer if needed. Windows device and multiplayer testing remain pending. |
+| Distortion while speaking over music | Reduce both levels: microphone audio and music share the voice channel. |
+
+## Development
+
+Install JDK 25 and Gradle 9.8.2, then run:
 
 ```sh
 gradle clean build
 ```
 
-Ausgabe: `build/libs/flx4-voicechat-0.2.0-alpha.1.jar`.
+Output: `build/libs/flx4-voicechat-0.2.0-alpha.2.jar`.
 
-Das Menü verwendet native Minecraft-Screens, Buttons, Tooltips und Lautstärke-Slider. Schrift, Fokusrahmen und Widget-Texturen entsprechen Minecraft und reagieren auf Ressourcenpakete. Kein separates Desktop-Fenster und kein zusätzlicher Java-Prozess. Fabric Loom 1.17.21 kompiliert gegen Minecraft 26.3.
+Fabric Loom 1.17.21 compiles the native menu against Minecraft 26.3. Audio integration uses the public Simple Voice Chat API and Java Sound.
 
-- Aufnahme: 48 kHz, signed PCM16 little endian; Stereo mit Mono-Fallback.
-- Frames: 960 Samples / 20 ms. Maximal drei Frames im FIFO; alte Frames über 100 ms werden verworfen.
-- Keine Datei-Aufzeichnung, keine zusätzlichen Netzwerkports und kein eigener Serverdienst.
-- `gradle audioTest`: Tests für PCM-Dekodierung, Downmix, Übersteuerung, Pegel und Puffer.
-- Siehe [TESTING.md](TESTING.md) für den noch erforderlichen Praxistest.
+- Capture: 48 kHz, signed PCM16 little endian; stereo with mono fallback.
+- Frames: 960 samples / 20 ms. The FIFO holds at most three frames and discards frames older than 100 ms.
+- No audio recording to files, additional network ports or separate server service.
+- `gradle audioTest` checks PCM decoding, downmixing, saturation, metering and buffering.
+- See [TESTING.md](TESTING.md) for the remaining manual acceptance checks.
 
-## Quellen
+## References
 
-- [Simple Voice Chat – API](https://modrepo.de/minecraft/voicechat/api/getting_started)
-- [MergeClientSoundEvent im 26.3-Quellcode](https://github.com/henkelmax/simple-voice-chat/blob/26.3/api/src/main/java/de/maxhenkel/voicechat/api/events/MergeClientSoundEvent.java)
-- [AlphaTheta: FLX4 / Rekordbox / PC MASTER OUT unter Windows](https://support.alphatheta.com/en-US/articles/26128189455769)
+- [Simple Voice Chat API setup](https://modrepo.de/minecraft/voicechat/api/getting_started)
+- [MergeClientSoundEvent source for 26.3](https://github.com/henkelmax/simple-voice-chat/blob/26.3/api/src/main/java/de/maxhenkel/voicechat/api/events/MergeClientSoundEvent.java)
+- [AlphaTheta: FLX4 / Rekordbox / PC MASTER OUT on Windows](https://support.alphatheta.com/en-US/articles/26128189455769)
 - [VB-CABLE](https://vb-audio.com/Cable/)
 
-Unabhängiges Community-Projekt; keine offizielle Integration von AlphaTheta/Pioneer DJ oder Mojang. Lizenz: MIT.
+Independent community project, not an official AlphaTheta/Pioneer DJ or Mojang integration. Licensed under the MIT License.

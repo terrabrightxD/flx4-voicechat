@@ -15,28 +15,32 @@ public final class FlxScreen extends Screen {
     private boolean loading;
     private String deviceError;
 
-    public FlxScreen() { super(Component.literal("FLX4 · DJ-Mixer")); }
+    public FlxScreen() { super(Component.translatable("gui.flx4.title")); }
     private FlxPlugin plugin() { return FlxPlugin.instance; }
     private static Component text(String value) { return Component.literal(value); }
+
+    private static String tr(String key, Object... args) {
+        return Component.translatable("gui.flx4." + key, args).getString();
+    }
 
     @Override protected void init() {
         panelWidth = Math.min(320, width - 20);
         left = (width - panelWidth) / 2;
         top = Math.max(0, (height - 234) / 2);
-        deviceButton = addRenderableWidget(Button.builder(text("Audioeingang auswählen"), button -> {
+        deviceButton = addRenderableWidget(Button.builder(text(tr("select")), button -> {
             if (!FlxClient.devices.isEmpty())
                 FlxClient.selected = (FlxClient.selected + 1) % FlxClient.devices.size();
             updateButtons();
         }).bounds(left, top + 32, panelWidth, 20).build());
-        refreshButton = addRenderableWidget(Button.builder(text("Audiogeräte neu laden"), button -> refreshDevices())
+        refreshButton = addRenderableWidget(Button.builder(text(tr("refresh")), button -> refreshDevices())
                 .bounds(left, top + 56, panelWidth, 20).build());
         addRenderableWidget(new GainSlider(left, top + 80, panelWidth));
         mutedButton = addRenderableWidget(Button.builder(text(""), button -> {
             if (plugin() != null) plugin().allowWhileMicMuted = !plugin().allowWhileMicMuted;
             updateButtons();
         }).bounds(left, top + 104, panelWidth, 20).build());
-        mutedButton.setTooltip(Tooltip.create(text("AN: Musik läuft auch bei stummem Mikrofon. Push-to-Talk steuert nur deine Stimme.")));
-        startButton = addRenderableWidget(Button.builder(text("Musik starten"), button -> {
+        mutedButton.setTooltip(Tooltip.create(text(tr("muted_tip"))));
+        startButton = addRenderableWidget(Button.builder(text(tr("start")), button -> {
             FlxPlugin p = plugin();
             if (p == null) return;
             if (p.capture.active()) p.capture.stop();
@@ -44,7 +48,7 @@ public final class FlxScreen extends Screen {
                 p.capture.start(FlxClient.devices.get(FlxClient.selected));
             updateButtons();
         }).bounds(left, top + 128, panelWidth, 20).build());
-        addRenderableWidget(Button.builder(text("Zurück zum Spiel"), button -> onClose())
+        addRenderableWidget(Button.builder(text(tr("back")), button -> onClose())
                 .bounds(left, top + 212, panelWidth, 20).build());
         updateButtons();
         if (FlxClient.devices.isEmpty() && !loading) refreshDevices();
@@ -58,7 +62,7 @@ public final class FlxScreen extends Screen {
                 ? FlxClient.devices.get(FlxClient.selected).toString() : null;
         CompletableFuture.supplyAsync(Capture::devices).whenComplete((devices, failure) -> minecraft.execute(() -> {
             loading = false;
-            if (failure != null) deviceError = "Audiogeräte konnten nicht geladen werden";
+            if (failure != null) deviceError = tr("devices_error");
             else {
                 FlxClient.devices = devices;
                 FlxClient.selected = -1;
@@ -75,15 +79,15 @@ public final class FlxScreen extends Screen {
         boolean active = p != null && p.capture.active();
         boolean selected = FlxClient.selected >= 0 && FlxClient.selected < FlxClient.devices.size();
         String name = selected ? FlxClient.devices.get(FlxClient.selected).info().getName()
-                : (loading ? "Suche Audiogeräte …" : "Audioeingang auswählen …");
+                : (loading ? tr("searching") : tr("select"));
         deviceButton.setMessage(text(font.plainSubstrByWidth(name, panelWidth - 24)));
         deviceButton.setTooltip(Tooltip.create(text(selected ? FlxClient.devices.get(FlxClient.selected).toString()
-                : "Klicken zum Durchschalten. Für VB-CABLE: CABLE Output wählen.")));
+                : tr("device_tip"))));
         deviceButton.active = !active && !loading && !FlxClient.devices.isEmpty();
         refreshButton.active = !active && !loading;
         mutedButton.active = p != null;
-        mutedButton.setMessage(text("Musik bei Mikrofon-Stumm: " + (p != null && p.allowWhileMicMuted ? "AN" : "AUS")));
-        startButton.setMessage(text(active ? "■ Musik stoppen" : "▶ Musik starten"));
+        mutedButton.setMessage(text(tr("muted", tr(p != null && p.allowWhileMicMuted ? "on" : "off"))));
+        startButton.setMessage(text(active ? tr("stop") : tr("start")));
         startButton.active = active || (p != null && p.connected && selected && !loading);
     }
     @Override public void tick() { super.tick(); updateButtons(); }
@@ -99,14 +103,14 @@ public final class FlxScreen extends Screen {
         g.fill(left, top + 155, left + panelWidth, top + 163, 0xFF151515);
         g.fill(left + 1, top + 156, left + 1 + (panelWidth - 2) * peak / 32768, top + 162,
                 peak >= 32767 ? 0xFFFF5555 : peak > 26000 ? 0xFFFFFF55 : 0xFF55FF55);
-        String status = p == null ? "Voice Chat wird geladen …" : !p.connected ? "Voice Chat: nicht verbunden"
-                : p.capture.active() ? p.transmission : "Bereit · Musik gestoppt";
+        String status = p == null ? tr("loading") : !p.connected ? tr("disconnected")
+                : p.capture.active() ? Component.translatable(p.transmission).getString() : tr("ready");
         line(g, status, top + 168, p != null && p.connected ? 0xFF55FF55 : 0xFFFFAA00);
-        String detail = deviceError != null ? deviceError : p != null && p.capture.status().startsWith("Fehler")
-                ? p.capture.status() : peak >= 32767 ? "Übersteuert! Lautstärke senken."
-                : FlxClient.devices.isEmpty() && !loading ? "Kein Audioeingang gefunden" : "Pegel: " + Math.round(peak * 100.0 / 32768) + " % · Mono";
+        String detail = deviceError != null ? deviceError : p != null && p.capture.status().startsWith("Error:")
+                ? p.capture.status() : peak >= 32767 ? tr("clipping")
+                : FlxClient.devices.isEmpty() && !loading ? tr("no_devices") : tr("level", Math.round(peak * 100.0 / 32768));
         line(g, detail, top + 180, 0xFFAAAAAA);
-        line(g, "Beim Schließen läuft die Musik weiter.", top + 197, 0xFFAAAAAA);
+        line(g, tr("close_hint"), top + 197, 0xFFAAAAAA);
     }
     private void line(GuiGraphicsExtractor g, String value, int y, int color) {
         String clipped = font.plainSubstrByWidth(value, panelWidth);
@@ -117,7 +121,7 @@ public final class FlxScreen extends Screen {
             super(x, y, width, 20, Component.empty(), plugin() == null ? 0.35 : plugin().gain / 2);
             updateMessage();
         }
-        @Override protected void updateMessage() { setMessage(text("Musiklautstärke: " + Math.round(value * 200) + " %")); }
+        @Override protected void updateMessage() { setMessage(text(tr("volume", Math.round(value * 200)))); }
         @Override protected void applyValue() { if (plugin() != null) plugin().gain = value * 2; }
     }
 }

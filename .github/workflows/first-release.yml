@@ -33,24 +33,26 @@ jobs:
       - name: Publish JAR as first prerelease
         run: |
           cat > notes.md <<'NOTES'
-          Erste Alpha-Version für Minecraft Java 26.3 (Fabric, Windows).
-          
-          - Rekordbox-/DDJ-FLX4-Mix über ein virtuelles Audiokabel in Simple Voice Chat einspeisen.
-          - Eigenes Minecraft-Menü mit F8 (umlegbar), Audioauswahl, Start/Stopp, Lautstärke und Pegelanzeige.
-          - Escape schließt das Menü; Musik läuft weiter.
-          
-          Installation: Die angehängte JAR in den mods-Ordner legen und ältere Versionen dieser Mod entfernen.
-          Benötigt: Java 25, Fabric Loader 0.19.5+, Fabric API 0.160.5+26.3 oder neuer für 26.3 und Simple Voice Chat 2.6.27+ für 26.3.
-          
-          Build und 13 Audio-Tests erfolgreich. Ingame-Darstellung sowie der FLX4-/Multiplayer-Hörtest stehen noch aus. Übertragung in Mono.
-          
-          Einrichtung: https://github.com/terrabrightxD/flx4-voicechat#readme
+          First alpha release for Minecraft Java 26.3 (Fabric, Windows).
+
+          - Send your Rekordbox/DDJ-FLX4 mix through a virtual audio cable into Simple Voice Chat.
+          - Native Minecraft menu opened with F8 (rebindable), with input selection, start/stop, volume and a level meter.
+          - Escape closes the menu while music continues playing.
+
+          Installation: Put the attached JAR in your mods folder and remove older versions of this mod.
+          Requires Java 25, Fabric Loader 0.19.5+, Fabric API 0.160.5+26.3 or newer for 26.3, and Simple Voice Chat 2.6.27+ for 26.3.
+
+          Compilation and 13 audio checks passed. In-game UI and FLX4/multiplayer listening tests are still pending. Audio is transmitted in mono.
+
+          This original release JAR has a German menu. English UI support is available in development builds starting with 0.2.0-alpha.2; the attached binary has not been replaced.
+
+          Setup guide: https://github.com/terrabrightxD/flx4-voicechat#readme
           NOTES
           if gh release view v0.2.0-alpha.1 >/dev/null 2>&1; then
-            echo "Release already exists; leaving it unchanged."
+            gh release edit v0.2.0-alpha.1 --title "FLX4 Voice Chat 0.2.0 Alpha – First Release" --notes-file notes.md
             exit 0
           fi
           gh release create v0.2.0-alpha.1 artifact/*.jar \
             --target 70548eaeddc2ecad598cc659da0ddd632a60e3a9 \
-            --title "FLX4 Voice Chat 0.2.0 Alpha – erster Release" \
+            --title "FLX4 Voice Chat 0.2.0 Alpha – First Release" \
             --notes-file notes.md --prerelease
