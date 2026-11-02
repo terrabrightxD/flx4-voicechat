@@ -4,10 +4,6 @@ A client-side mod for **Minecraft Java 26.3 / Fabric / Windows**. Mix with your 
 
 **Status: alpha.** Compilation and automated audio checks are covered by CI. In-game UI testing and end-to-end testing with Windows, Rekordbox, an FLX4 and another player are still pending.
 
-## Project roadmap
-
-See [ROADMAP.md](ROADMAP.md) for planned releases, priorities, acceptance criteria and longer-term ideas. The next priority is validating the existing Windows/FLX4 workflow before adding features.
-
 ## Downloads and requirements
 
 - [First release: v0.2.0-alpha.1](https://github.com/terrabrightxD/flx4-voicechat/releases/tag/v0.2.0-alpha.1) — includes the original German-language menu.
